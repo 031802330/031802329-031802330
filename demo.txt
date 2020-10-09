@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Basic TreeGrid - jQuery EasyUI Demo</title>
+    <link rel="stylesheet" type="text/css" href="./jquery-easyui-1.3.3/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="./jquery-easyui-1.3.3/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="./jquery-easyui-1.3.3/demo/demo.css">
+    <script type="text/javascript" src="./jquery-easyui-1.3.3/jquery.min.js"></script>
+    <script type="text/javascript" src="./jquery-easyui-1.3.3/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="./jquery-easyui-1.3.3/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<script type="text/javascript">
+    function pro() {
+        $.messager.show({
+            title: '输入实例',
+            msg: '导师：张三<br>2016级博士生：天一、王二、吴五<br>刘六：JAVA、数学建模',
+            showType: 'slide',
+            style: {
+                right: '',
+                top: document.body.scrollTop + document.documentElement.scrollTop,
+                bottom: ''
+            }
+        });
+    }
+
+    function show() {
+        text = $("#text").val();
+        text_arr = text.split('\n');
+        var student = [];
+        var grade = [];
+        var id = 0;
+        for (var i = 0; i < text_arr.length; i++) {
+            if (text_arr[i].indexOf("博士生") === -1 && text_arr[i].indexOf("硕士生") === -1 &&
+                text_arr[i].indexOf("本科生") === -1 && text_arr[i].indexOf("导师") === -1 && text_arr[i] !== "") {
+                var temp1 = text_arr[i].split('：');
+                var temp2 = temp1[0];
+                var temp3 = temp1[1].split('、');
+                var temp4 = [];
+                for (var j = 0; j < temp3.length; j++) {
+                    temp4.push({"id": id++, "name": temp3[j], "skills": temp3[j]});
+                }
+                student.push({"id": id++, "name": temp2, "student": temp2, "children": temp4});
+            }
+        }
+        for (var q = 0; q < text_arr.length; q++) {
+            if (text_arr[q].indexOf("博士生") !== -1 || text_arr[q].indexOf("硕士生") !== -1 ||
+                text_arr[q].indexOf("本科生") !== -1 && text_arr[q] !== "") {
+                var demo1 = text_arr[q].split('：');
+                var demo2 = demo1[0];
+                var demo3 = demo1[1].split('、');
+                var demo4 = [];
+                for (var k = 0; k < demo3.length; k++) {
+                    var flag = 0;
+                    for (var m = 0; m < student.length; m++) {
+                        if (student[m].student === demo3[k]) {
+                            demo4.push({"id": id++, "name": demo3[k], "student": demo3[k], "children": student[m].children})
+                            flag = 1;
+                        }
+                    }
+                    if (flag === 0) {
+                        demo4.push({"id": id++, "name": demo3[k], "student": demo3[k]});
+                    }
+                }
+                grade.push({"id": id++, "name": demo2, "grade": demo2, "children": demo4});
+            }
+        }
+        var mentor = []
+        for (var n = 0; n < text_arr.length; n++) {
+            if (text_arr[n].indexOf("导师") !== -1 && text_arr[n] !== "") {
+                var t = text_arr[n].split("：");
+                var men = t[1];
+                mentor.push({"id": id++, "name": men, "mentor": men, "children": grade});
+            }
+        }
+        $('#dg').treegrid('loadData', mentor);
+    }
+</script>
+<body style="background-color: #95B8E7">
+<div style="margin: 50px 0 0 150px">
+    <div style="display: inline-block;">
+        <label for="text">
+            <h2>请在下方输入学术家族树：
+                <a href="#" class="easyui-linkbutton" onclick="pro()">提示</a>&nbsp;&nbsp;
+                <a href="#" class="easyui-linkbutton" onclick="show()">展示成树</a>
+            </h2>
+        </label>
+        <textarea id="text" style="width: 400px;height: 450px;">
+
+        </textarea>
+    </div>
+    <div style="margin-left:50px;display: inline-block;">
+        <table id="dg" title="树浏览" class="easyui-treegrid" style="width:700px;height:500px"
+               data-options="
+				url: '',
+				rownumbers: true,
+				idField: 'id',
+				treeField: 'name'
+			">
+            <thead>
+            <tr>
+                <th data-options="field:'name'" width="500">导师--年级--学生--技能</th>
+                <!--                <th data-options="field:'grade'" width="300">年级</th>-->
+                <!--                <th data-options="field:'skills'" align="right">技能</th>-->
+                <!--            <th data-options="field:'date'" width="150">修改日期</th>-->
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+
