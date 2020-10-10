@@ -1,6 +1,6 @@
 ## 目录
 
-- work
+- work1
   - demo.html（在chrome上运行）
   - jquery-easyui-1.3.3/themes/default/easyui.css（调用的外部框架）
   - jquery-easyui-1.3.3/themes/icon.css
