@@ -27,53 +27,115 @@
     function show() {
         text = $("#text").val();
         text_arr = text.split('\n');
-        var student = [];
-        var grade = [];
-        var id = 0;
-        for (var i = 0; i < text_arr.length; i++) {
-            if (text_arr[i].indexOf("博士生") === -1 && text_arr[i].indexOf("硕士生") === -1 &&
-                text_arr[i].indexOf("本科生") === -1 && text_arr[i].indexOf("导师") === -1 && text_arr[i] !== "") {
-                var temp1 = text_arr[i].split('：');
-                var temp2 = temp1[0];
-                var temp3 = temp1[1].split('、');
-                var temp4 = [];
-                for (var j = 0; j < temp3.length; j++) {
-                    temp4.push({"id": id++, "name": temp3[j], "skills": temp3[j]});
-                }
-                student.push({"id": id++, "name": temp2, "student": temp2, "children": temp4});
+        var flag_count = [];
+        for (var f = 0; f < text_arr.length; f++) {
+            if (text_arr[f].indexOf("导师") !== -1) {
+                flag_count.push(f);
             }
         }
-        for (var q = 0; q < text_arr.length; q++) {
-            if (text_arr[q].indexOf("博士生") !== -1 || text_arr[q].indexOf("硕士生") !== -1 ||
-                text_arr[q].indexOf("本科生") !== -1 && text_arr[q] !== "") {
-                var demo1 = text_arr[q].split('：');
-                var demo2 = demo1[0];
-                var demo3 = demo1[1].split('、');
-                var demo4 = [];
-                for (var k = 0; k < demo3.length; k++) {
-                    var flag = 0;
-                    for (var m = 0; m < student.length; m++) {
-                        if (student[m].student === demo3[k]) {
-                            demo4.push({"id": id++, "name": demo3[k], "student": demo3[k], "children": student[m].children})
-                            flag = 1;
+        var mentor = [];
+        var id = 0;
+        for (var ff = 0; ff < flag_count.length; ff++) {
+            var begin = flag_count[ff];
+            var end = 0;
+            if (flag_count.length === 1 || ff === flag_count.length - 1) {
+                end = text_arr.length;
+            } else {
+                end = flag_count[ff + 1];
+            }
+
+            var student = [];
+            var grade = [];
+
+            for (var i = begin; i < end; i++) {
+                if (text_arr[i].indexOf("博士生") === -1 && text_arr[i].indexOf("硕士生") === -1 &&
+                    text_arr[i].indexOf("本科生") === -1 && text_arr[i].indexOf("导师") === -1 && text_arr[i] !== "") {
+                    var temp1 = text_arr[i].split('：');
+                    var temp2 = temp1[0];
+                    var temp3 = temp1[1].split('、');
+                    var temp4 = [];
+                    for (var j = 0; j < temp3.length; j++) {
+                        temp4.push({"id": id++, "name": temp3[j], "skills": temp3[j]});
+                    }
+                    student.push({"id": id++, "name": temp2, "student": temp2, "children": temp4});
+                }
+            }
+            for (var q = begin; q < end; q++) {
+                if (text_arr[q].indexOf("博士生") !== -1 || text_arr[q].indexOf("硕士生") !== -1 ||
+                    text_arr[q].indexOf("本科生") !== -1 && text_arr[q] !== "") {
+                    var demo1 = text_arr[q].split('：');
+                    var demo2 = demo1[0];
+                    var demo3 = demo1[1].split('、');
+                    var demo4 = [];
+                    for (var k = 0; k < demo3.length; k++) {
+                        var flag = 0;
+                        for (var m = 0; m < student.length; m++) {
+                            if (student[m].student === demo3[k]) {
+                                demo4.push({
+                                    "id": id++,
+                                    "name": demo3[k],
+                                    "student": demo3[k],
+                                    "children": student[m].children
+                                })
+                                flag = 1;
+                            }
+                        }
+                        if (flag === 0) {
+                            demo4.push({"id": id++, "name": demo3[k], "student": demo3[k]});
                         }
                     }
-                    if (flag === 0) {
-                        demo4.push({"id": id++, "name": demo3[k], "student": demo3[k]});
+                    grade.push({"id": id++, "name": demo2, "grade": demo2, "children": demo4});
+                }
+            }
+            for (var n = begin; n < end; n++) {
+                if (text_arr[n].indexOf("导师") !== -1 && text_arr[n] !== "") {
+                    var t = text_arr[n].split("：");
+                    var men = t[1];
+                    mentor.push({"id": id++, "name": '导师：'+men, "mentor": men, "children": grade});
+                }
+            }
+        }
+        console.log(mentor);
+        var Mentor = [];
+        var delete_num = [];
+        for (var me = mentor.length-1; me >=0 ;me--){
+            var mentor_name = [];
+            for (var ment = 0; ment < mentor.length; ment++){
+                // if (ment !== me){
+                    mentor_name.push(mentor[ment]);
+                // }
+            }
+            for (var mento = 0; mento < mentor[me].children.length;mento++){
+                for (var mentoe = 0; mentoe < mentor[me].children[mento].children.length;mentoe++){
+                    var name_test = mentor[me].children[mento].children[mentoe].name;
+                    for (var fg = 0; fg < mentor_name.length;fg++){
+                        if ('导师：' + name_test === mentor_name[fg].name && ment !== me){
+                            // alert(name_test);
+                            mentor[me].children[mento].children[mentoe].name = mentor_name[fg].name;
+                            mentor[me].children[mento].children[mentoe].children = mentor_name[fg].children;
+                            // delete mentor[fg];
+                            Mentor.push(mentor[me]);
+                            delete_num.push(fg);
+                            // alert(fg);
+                        }
                     }
                 }
-                grade.push({"id": id++, "name": demo2, "grade": demo2, "children": demo4});
             }
         }
-        var mentor = []
-        for (var n = 0; n < text_arr.length; n++) {
-            if (text_arr[n].indexOf("导师") !== -1 && text_arr[n] !== "") {
-                var t = text_arr[n].split("：");
-                var men = t[1];
-                mentor.push({"id": id++, "name": men, "mentor": men, "children": grade});
+        var new_mentor = [];
+        for (var new_ = 0; new_ < mentor.length;new_++){
+            var flag_new = 0;
+            for (var new_1 = 0; new_1 < delete_num.length;new_1++){
+                if (delete_num[new_1] === new_){
+                    flag = 1;
+                }
+            }
+            if (flag !== 1) {
+                new_mentor.push(mentor[new_]);
             }
         }
-        $('#dg').treegrid('loadData', mentor);
+        console.log(Mentor);
+        $('#dg').treegrid('loadData', new_mentor);
     }
 </script>
 <body style="background-color: #95B8E7">
@@ -110,4 +172,3 @@
 </div>
 </body>
 </html>
-
