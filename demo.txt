@@ -13,10 +13,10 @@
 <script type="text/javascript">
     function pro() {
         $.messager.show({
-            title: '输入实例',
-            msg: '导师：张三<br>2016级博士生：天一、王二、吴五<br>刘六：JAVA、数学建模',
-            showType: 'slide',
-            style: {
+            title: '输入实例',     //头部面板上显示的标题文本
+            msg: '导师：张三<br>2016级博士生：天一、王二、吴五<br>刘六：JAVA、数学建模',    //要显示的消息文本
+            showType: 'slide',     // 定义消息窗口如何显示,默认是 slide
+            style: {        //定义消息窗口的自定义样式
                 right: '',
                 top: document.body.scrollTop + document.documentElement.scrollTop,
                 bottom: ''
@@ -25,9 +25,10 @@
     }
 
     function show() {
-        text = $("#text").val();
-        text_arr = text.split('\n');
+        text = $("#text").val();//获取文本框文字
+        text_arr = text.split('\n');//文字按行分割
         var flag_count = [];
+        //记录导师所在行的索引
         for (var f = 0; f < text_arr.length; f++) {
             if (text_arr[f].indexOf("导师") !== -1) {
                 flag_count.push(f);
@@ -36,6 +37,7 @@
         var mentor = [];
         var id = 0;
         for (var ff = 0; ff < flag_count.length; ff++) {
+            //确定一个导师下的所有学生的起始索引和终止索引
             var begin = flag_count[ff];
             var end = 0;
             if (flag_count.length === 1 || ff === flag_count.length - 1) {
@@ -46,7 +48,7 @@
 
             var student = [];
             var grade = [];
-
+            //获取学生的技能，使之转成JSON数据
             for (var i = begin; i < end; i++) {
                 if (text_arr[i].indexOf("博士生") === -1 && text_arr[i].indexOf("硕士生") === -1 &&
                     text_arr[i].indexOf("本科生") === -1 && text_arr[i].indexOf("导师") === -1 && text_arr[i] !== "") {
@@ -60,6 +62,7 @@
                     student.push({"id": id++, "name": temp2, "student": temp2, "children": temp4});
                 }
             }
+            //获取每个年级下的学生，并将学生技能补充进来
             for (var q = begin; q < end; q++) {
                 if (text_arr[q].indexOf("博士生") !== -1 || text_arr[q].indexOf("硕士生") !== -1 ||
                     text_arr[q].indexOf("本科生") !== -1 && text_arr[q] !== "") {
@@ -87,6 +90,7 @@
                     grade.push({"id": id++, "name": demo2, "grade": demo2, "children": demo4});
                 }
             }
+            //获取导师数据，补充年级学生技能数据，使之成为JSON格式的数据（导师-年级-学生-技能）
             for (var n = begin; n < end; n++) {
                 if (text_arr[n].indexOf("导师") !== -1 && text_arr[n] !== "") {
                     var t = text_arr[n].split("：");
@@ -98,6 +102,7 @@
         console.log(mentor);
         var Mentor = [];
         var delete_num = [];
+        //以下几个循环的目的是补充导师下的学生是导师的情况，可以支持N重导师嵌套
         for (var me = mentor.length-1; me >=0 ;me--){
             var mentor_name = [];
             for (var ment = 0; ment < mentor.length; ment++){
@@ -172,3 +177,4 @@
 </div>
 </body>
 </html>
+
