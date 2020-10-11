@@ -1,6 +1,6 @@
 ## 目录
 
-- work1
+- work2
   - demo.html（在chrome上运行）
   - jquery-easyui-1.3.3/themes/default/easyui.css（调用的外部框架）
   - jquery-easyui-1.3.3/themes/icon.css
@@ -11,7 +11,7 @@
 
 ## 使用方式
 
-- 下载work到本地，解压后文件本地，用chrome打开demo.html,在左侧文本框输入文本并且有输入提示。
+- 下载work2到本地，解压后文件本地，用chrome打开demo.html,在左侧文本框输入文本并且有输入提示。
 
   学术家族树以文本形式输入，点击展示成树。
   
