@@ -50,8 +50,8 @@
             var grade = [];
             //获取学生的技能，使之转成JSON数据
             for (var i = begin; i < end; i++) {
-                if (text_arr[i].indexOf("博士生") === -1 && text_arr[i].indexOf("硕士生") === -1 &&
-                    text_arr[i].indexOf("本科生") === -1 && text_arr[i].indexOf("导师") === -1 && text_arr[i] !== "") {
+                if (text_arr[i].indexOf("级博士生") === -1 && text_arr[i].indexOf("级硕士生") === -1 &&
+                    text_arr[i].indexOf("级本科生") === -1 && text_arr[i].indexOf("导师") === -1 && text_arr[i] !== "") {
                     var temp1 = text_arr[i].split('：');
                     var temp2 = temp1[0];
                     var temp3 = temp1[1].split('、');
@@ -64,8 +64,8 @@
             }
             //获取每个年级下的学生，并将学生技能补充进来
             for (var q = begin; q < end; q++) {
-                if (text_arr[q].indexOf("博士生") !== -1 || text_arr[q].indexOf("硕士生") !== -1 ||
-                    text_arr[q].indexOf("本科生") !== -1 && text_arr[q] !== "") {
+                if (text_arr[q].indexOf("级博士生") !== -1 || text_arr[q].indexOf("级硕士生") !== -1 ||
+                    text_arr[q].indexOf("级本科生") !== -1 && text_arr[q] !== "") {
                     var demo1 = text_arr[q].split('：');
                     var demo2 = demo1[0];
                     var demo3 = demo1[1].split('、');
